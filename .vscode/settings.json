@@ -1,3 +1,4 @@
 {
-  "conventionalCommits.scopes": ["video"]
+  "conventionalCommits.scopes": ["video"],
+  "typescript.preferences.autoImportFileExcludePatterns": ["@radix-ui"]
 }
