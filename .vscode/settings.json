@@ -4,5 +4,6 @@
     "@radix-ui",
     "cmdk",
     "next/router"
-  ]
+  ],
+  "typescript.preferences.preferTypeOnlyAutoImports": true
 }

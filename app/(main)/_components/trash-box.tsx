@@ -88,7 +88,7 @@ export function TrashBox() {
             <span className="truncate pl-2">{d.title}</span>
             <div className="flex items-center">
               <div
-                className="rounded-sm p-2 hover:bg-neutral-200"
+                className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
                 role="button"
                 onClick={(e) => handleRestore(e, d._id)}
               >
@@ -96,7 +96,7 @@ export function TrashBox() {
               </div>
               <ConfirmModal onConfirm={() => handleRemove(d._id)}>
                 <div
-                  className="rounded-sm p-2 hover:bg-neutral-200"
+                  className="rounded-sm p-2 hover:bg-neutral-200 dark:hover:bg-neutral-600"
                   role="button"
                 >
                   <Trash className="h-4 w-4 text-muted-foreground" />
