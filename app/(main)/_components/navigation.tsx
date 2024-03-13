@@ -1,12 +1,31 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
+import {
+  ChevronsLeft,
+  MenuIcon,
+  Plus,
+  PlusCircle,
+  Search,
+  Settings,
+  Trash,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 
 import { useMediaQuery } from "usehooks-ts";
 import { UserItem } from "./user-item";
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { Item } from "./item";
+import { toast } from "sonner";
+import { DocumentList } from "./document-list";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { TrashBox } from "./trash-box";
 
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 480;
@@ -15,6 +34,7 @@ const MAX_WIDTH = 480;
 export function Navigation() {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width: 768px)");
+  const create = useMutation(api.documents.create);
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -87,6 +107,18 @@ export function Navigation() {
     if (isMobile) collapse();
   }, [isMobile, collapse, pathname]);
 
+  function handleCreate() {
+    const promise = create({
+      title: "Untitled",
+    });
+
+    toast.promise(promise, {
+      loading: "Creating a new note...",
+      success: "New note created!",
+      error: "Failed to create a new note.",
+    });
+  }
+
   return (
     <>
       <aside
@@ -113,9 +145,24 @@ export function Navigation() {
         </div>
         <div className="">
           <UserItem />
+          <Item onClick={() => {}} isSearch label="Search" icon={Search} />
+          <Item onClick={() => {}} label="Settings" icon={Settings} />
+          <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          <p>Documents</p>
+          <DocumentList />
+          <Item onClick={handleCreate} label="Add a page" icon={Plus} />
+          <Popover>
+            <PopoverTrigger className="w-full mt-4">
+              <Item label="Trash" icon={Trash} />
+            </PopoverTrigger>
+            <PopoverContent
+              className="p-0 w-72"
+              side={isMobile ? "bottom" : "right"}
+            >
+              <TrashBox />
+            </PopoverContent>
+          </Popover>
         </div>
         <div
           onMouseDown={handleMouseDown}
