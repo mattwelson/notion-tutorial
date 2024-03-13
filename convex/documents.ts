@@ -68,6 +68,21 @@ export const getTrash = query({
   },
 });
 
+export const getSearch = query({
+  async handler({ db, auth }) {
+    const userId = await userIsAuthenticated({ auth });
+
+    const documents = await db
+      .query("documents")
+      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .filter((q) => q.eq(q.field("isArchived"), false))
+      .order("desc")
+      .collect();
+
+    return documents;
+  },
+});
+
 export const create = mutation({
   args: {
     title: v.string(),
