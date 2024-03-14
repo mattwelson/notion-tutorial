@@ -260,3 +260,17 @@ export const removeIcon = mutation({
     });
   },
 });
+
+export const removeImage = mutation({
+  args: {
+    id: v.id("documents"),
+  },
+  async handler({ auth, db }, { id, ...args }) {
+    const userId = await userIsAuthenticated({ auth });
+    await userOwnsDocument({ userId, db, id });
+
+    await db.patch(id, {
+      coverImage: undefined,
+    });
+  },
+});

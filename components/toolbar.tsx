@@ -8,6 +8,7 @@ import { ImageIcon, Smile, X } from "lucide-react";
 import { Button } from "./ui/button";
 import { ElementRef, useRef, useState } from "react";
 import TextareaAutosize from "react-textarea-autosize";
+import { useCoverImage } from "@/hooks/useCoverImageStore";
 
 export function Toolbar({
   initialData,
@@ -22,6 +23,8 @@ export function Toolbar({
   const inputRef = useRef<ElementRef<"textarea">>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState(initialData.title);
+
+  const coverImage = useCoverImage();
 
   function handleIconChange(icon: string) {
     update({
@@ -104,7 +107,7 @@ export function Toolbar({
             className="text-muted-foreground text-xs"
             variant="outline"
             size="sm"
-            onClick={() => {}}
+            onClick={coverImage.open}
           >
             <ImageIcon className="h-4 w-4 mr-2" />
             Add image

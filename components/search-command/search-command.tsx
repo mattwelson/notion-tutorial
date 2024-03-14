@@ -41,7 +41,7 @@ export function SearchCommand() {
   }, [toggle]);
 
   function onSelect(id: string) {
-    router.push(`/document/${id}`);
+    router.push(`/documents/${id}`);
     onClose();
   }
 
