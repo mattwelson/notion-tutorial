@@ -1,4 +1,5 @@
-import { mutation } from "./_generated/server";
+import { v } from "convex/values";
+import { mutation, query } from "./_generated/server";
 
 export const store = mutation({
   async handler({ auth, db }) {
@@ -42,5 +43,21 @@ export const store = mutation({
       profileImage: identity.pictureUrl,
       clerkId: userId,
     });
+  },
+});
+
+export const getUserForDocument = query({
+  args: {
+    documentId: v.id("documents"),
+  },
+  async handler({ db }, { documentId }) {
+    // get user info for a document regardless of if the authenticated user is... indeed authenticated
+    const document = await db.get(documentId);
+    if (!document) return;
+    const user = await db
+      .query("users")
+      .withIndex("by_clerk", (q) => q.eq("clerkId", document.userId))
+      .unique();
+    return user;
   },
 });

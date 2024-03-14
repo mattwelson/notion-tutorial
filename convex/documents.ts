@@ -246,3 +246,17 @@ export const update = mutation({
     await db.patch(id, args);
   },
 });
+
+export const removeIcon = mutation({
+  args: {
+    id: v.id("documents"),
+  },
+  async handler({ auth, db }, { id, ...args }) {
+    const userId = await userIsAuthenticated({ auth });
+    await userOwnsDocument({ userId, db, id });
+
+    await db.patch(id, {
+      icon: undefined,
+    });
+  },
+});
