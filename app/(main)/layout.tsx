@@ -6,9 +6,13 @@ import { redirect } from "next/navigation";
 import { ReactNode } from "react";
 import { Navigation } from "./_components";
 import { SearchCommand } from "@/components/search-command";
+import { useStoreUser } from "@/hooks/useStoreUser";
 
 export default function MainLayout({ children }: { children: ReactNode }) {
   const { isAuthenticated, isLoading } = useConvexAuth();
+
+  // store user in convex
+  useStoreUser();
 
   if (isLoading)
     return (

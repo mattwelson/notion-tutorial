@@ -49,8 +49,6 @@ export function DocumentList({
       </>
     );
 
-  console.log({ level });
-
   return (
     <>
       <p

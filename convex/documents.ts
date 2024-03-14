@@ -27,6 +27,28 @@ async function userOwnsDocument({
   return document;
 }
 
+export const getById = query({
+  args: {
+    id: v.id("documents"),
+  },
+  async handler({ auth, db }, { id }) {
+    const identity = await auth.getUserIdentity();
+    const document = await db.get(id);
+
+    if (!document) throw new Error("Not found");
+
+    if (document.isPublished && !document.isArchived) return document;
+
+    if (!identity) throw new Error("Not authenticated");
+
+    const userId = identity.subject;
+
+    if (document.userId !== userId) throw new Error("Not authorized");
+
+    return document;
+  },
+});
+
 export const getSidebar = query({
   args: {
     parentDocument: v.optional(v.id("documents")),
@@ -205,5 +227,22 @@ export const remove = mutation({
     await userOwnsDocument({ userId, id, db });
 
     await db.delete(id);
+  },
+});
+
+export const update = mutation({
+  args: {
+    id: v.id("documents"),
+    title: v.optional(v.string()),
+    content: v.optional(v.string()),
+    coverImage: v.optional(v.string()),
+    icon: v.optional(v.string()),
+    isPublished: v.optional(v.boolean()),
+  },
+  async handler({ auth, db }, { id, ...args }) {
+    const userId = await userIsAuthenticated({ auth });
+    await userOwnsDocument({ userId, db, id });
+
+    await db.patch(id, args);
   },
 });

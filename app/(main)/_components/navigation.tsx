@@ -10,7 +10,7 @@ import {
   Settings,
   Trash,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { ElementRef, useCallback, useEffect, useRef, useState } from "react";
 
 import { useMediaQuery } from "usehooks-ts";
@@ -28,6 +28,7 @@ import {
 import { TrashBox } from "./trash-box";
 import { useSettings } from "@/hooks/useSettings";
 import { useSearch } from "@/hooks/useSearch";
+import { Navbar } from "./navbar";
 
 const MIN_WIDTH = 240;
 const MAX_WIDTH = 480;
@@ -35,6 +36,7 @@ const MAX_WIDTH = 480;
 // Handles lots of interactions and adjustments from the user
 export function Navigation() {
   const pathname = usePathname();
+  const params = useParams();
   const isMobile = useMediaQuery("(max-width: 768px)");
   const create = useMutation(api.documents.create);
   const settings = useSettings();
@@ -51,8 +53,6 @@ export function Navigation() {
   ) {
     event.preventDefault();
     event.stopPropagation();
-
-    console.log("mouse is down");
 
     isResizingRef.current = true;
     document.addEventListener("mousemove", handleMouseMove);
@@ -181,15 +181,9 @@ export function Navigation() {
           "left-0 w-full": isMobile,
         })}
       >
-        <nav className="bg-transparent px-3 py-2 w-full">
-          {isCollapsed && (
-            <MenuIcon
-              onClick={resetWidth}
-              className="h-6 w-6 text-muted-foregroud"
-              role="button"
-            />
-          )}
-        </nav>
+        {!!params.documentId && (
+          <Navbar isCollapsed={isCollapsed} onResetWidth={resetWidth} />
+        )}
       </div>
     </>
   );
