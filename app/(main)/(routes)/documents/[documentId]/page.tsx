@@ -1,11 +1,12 @@
 "use client";
 
 import { CoverImage } from "@/components/cover-image";
+import { BaseEditor } from "@/components/editor";
 import { Toolbar } from "@/components/toolbar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
-import { useQuery } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 
 export default function DocumentPage({
   params: { documentId },
@@ -15,6 +16,14 @@ export default function DocumentPage({
   const document = useQuery(api.documents.getById, {
     id: documentId,
   });
+  const update = useMutation(api.documents.update);
+
+  function handleUpdate(content: string) {
+    update({
+      id: documentId,
+      content,
+    });
+  }
 
   if (document === undefined)
     return (
@@ -37,6 +46,7 @@ export default function DocumentPage({
       <CoverImage url={document.coverImage} />
       <div className="md:max-w-3xl lg:max-w-4xl mx-auto">
         <Toolbar initialData={document} />
+        <BaseEditor onChange={handleUpdate} initialData={document.content} />
       </div>
     </div>
   );
