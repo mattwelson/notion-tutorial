@@ -12,7 +12,7 @@ export function BaseEditor({
   initialData,
   preview,
 }: {
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   initialData?: string;
   preview?: boolean;
 }) {
@@ -32,7 +32,7 @@ export function BaseEditor({
   }
 
   function handleChange() {
-    onChange(JSON.stringify(editor.document, null, 2));
+    onChange!(JSON.stringify(editor.document, null, 2));
   }
 
   return (

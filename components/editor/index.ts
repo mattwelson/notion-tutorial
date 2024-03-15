@@ -1,1 +1,3 @@
-export * from "./base-editor";
+import { BaseEditor } from "./base-editor";
+
+export default BaseEditor;
